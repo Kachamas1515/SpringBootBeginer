@@ -1,18 +1,17 @@
 package com.example.demo.api;
 
-import com.example.demo.business.TestBusiness;
+import com.example.demo.business.UserBusiness;
+import com.example.demo.entity.User;
 import com.example.demo.exception.BaseException;
 import com.example.demo.model.MRegisterRequest;
 import com.example.demo.model.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/test") //main request mapping
-public class Testapi {
+@RequestMapping("/user") //main request mapping
+public class UsersApi {
     //dependency injection//
     //method1//
 //    @Autowired
@@ -20,9 +19,9 @@ public class Testapi {
 
     //method2 -> fast performance more method1//
     //injection constructor// -> alt+enter
-    private final TestBusiness business;
+    private final UserBusiness business;
 
-    public Testapi(TestBusiness business) {
+    public UsersApi(UserBusiness business) {
         this.business = business;
     }
 
@@ -43,9 +42,9 @@ public class Testapi {
 
     @PostMapping
     @RequestMapping("/register")
-    public ResponseEntity register(@RequestBody MRegisterRequest req) throws BaseException {
+    public ResponseEntity<User> register(@RequestBody MRegisterRequest req) throws BaseException {
         //can ctrl+alt+v
-        String response = business.register(req);
+        User response = business.register(req);
         return ResponseEntity.ok(response);
         //old exception
 //        try {
@@ -56,7 +55,12 @@ public class Testapi {
 //        }
     }
 
-    //Other Mapping
+    //**Other Mapping**//
     //@PutMapping
     //@DeleteMapping
+    @PostMapping
+    public ResponseEntity<String> uploadProflePicture(@RequestPart MultipartFile file) throws BaseException{
+        String res = business.uploadProfilePicture(file);
+        return ResponseEntity.ok(res);
+    }
 }
